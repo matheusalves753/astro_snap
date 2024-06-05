@@ -18,7 +18,7 @@ This is a Flutter application that displays images from NASA's "Astronomy Pictur
 1. **Clone the repository**:
    ```sh
    git clone https://github.com/matheusalves753/astro_snap.git
-   cd apod-app
+   cd astro_snap
    ```
 
 2. **Install dependencies**:
