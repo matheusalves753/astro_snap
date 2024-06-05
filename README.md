@@ -44,48 +44,14 @@ lib
 └── src
     ├── data
     │   ├── datasources
-    │   │   ├── remote
-    │   │   │   ├── remote_data_source.dart
-    │   │   │   ├── remote.dart
-    │   │   │   └── datasources.dart
     │   ├── models
-    │   │   ├── apod_entry_model.dart
-    │   │   ├── apod_entry_model.freezed.dart
-    │   │   └── apod_entry_model.g.dart
     │   ├── repositories
-    │   │   ├── apod_repository.dart
-    │   │   └── repositories.dart
     ├── domain
     │   ├── entities
-    │   │   ├── apod_entry.dart
-    │   │   └── entities.dart
     │   ├── repositories
-    │   │   ├── apod_repository.dart
-    │   │   └── repositories.dart
     │   ├── usecases
-    │   │   ├── get_image_gallery_usecase.dart
-    │   │   └── usecases.dart
     ├── infrastructure
-    │   ├── utils
-    │   └── infrastructure.dart
     ├── presentation
-    │   ├── gallery_page
-    │   │   ├── views
-    │   │   │   ├── gallery_page.dart
-    │   │   │   └── views.dart
-    │   │   ├── gallery_page.dart
-    │   │   ├── gallery_page_state.dart
-    │   │   ├── gallery_page_state.freezed.dart
-    │   │   ├── gallery_page_view_model.dart
-    │   └── image_detail_page
-    │       ├── views
-    │       │   ├── image_detail_page.dart
-    │       │   └── views.dart
-    │       ├── image_detail_page.dart
-    │       ├── image_detail_page_state.dart
-    │       ├── image_detail_page_view_model.dart
-    ├── locator.dart
-    └── main.dart
 ```
 
 ## Dependencies
