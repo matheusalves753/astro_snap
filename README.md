@@ -1,5 +1,5 @@
 
-# Astronomy Picture of the Day (APOD) App
+# AstroSnap App
 
 ## Introduction
 
