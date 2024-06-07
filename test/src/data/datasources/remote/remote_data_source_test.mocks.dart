@@ -17,6 +17,9 @@ import 'package:hive/src/box/default_key_comparator.dart' as _i10;
 import 'package:http/http.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i7;
+import 'package:path_provider/path_provider.dart' as _i14;
+import 'package:path_provider_platform_interface/path_provider_platform_interface.dart'
+    as _i13;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -871,4 +874,98 @@ class MockFileUtils extends _i1.Mock implements _i12.FileUtils {
           ),
         )),
       ) as _i5.Future<_i4.Directory>);
+}
+
+/// A class which mocks [PathProviderPlatform].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockPathProviderPlatform extends _i1.Mock
+    implements _i13.PathProviderPlatform {
+  MockPathProviderPlatform() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i5.Future<String?> getTemporaryPath() => (super.noSuchMethod(
+        Invocation.method(
+          #getTemporaryPath,
+          [],
+        ),
+        returnValue: _i5.Future<String?>.value(),
+      ) as _i5.Future<String?>);
+
+  @override
+  _i5.Future<String?> getApplicationSupportPath() => (super.noSuchMethod(
+        Invocation.method(
+          #getApplicationSupportPath,
+          [],
+        ),
+        returnValue: _i5.Future<String?>.value(),
+      ) as _i5.Future<String?>);
+
+  @override
+  _i5.Future<String?> getLibraryPath() => (super.noSuchMethod(
+        Invocation.method(
+          #getLibraryPath,
+          [],
+        ),
+        returnValue: _i5.Future<String?>.value(),
+      ) as _i5.Future<String?>);
+
+  @override
+  _i5.Future<String?> getApplicationDocumentsPath() => (super.noSuchMethod(
+        Invocation.method(
+          #getApplicationDocumentsPath,
+          [],
+        ),
+        returnValue: _i5.Future<String?>.value(),
+      ) as _i5.Future<String?>);
+
+  @override
+  _i5.Future<String?> getApplicationCachePath() => (super.noSuchMethod(
+        Invocation.method(
+          #getApplicationCachePath,
+          [],
+        ),
+        returnValue: _i5.Future<String?>.value(),
+      ) as _i5.Future<String?>);
+
+  @override
+  _i5.Future<String?> getExternalStoragePath() => (super.noSuchMethod(
+        Invocation.method(
+          #getExternalStoragePath,
+          [],
+        ),
+        returnValue: _i5.Future<String?>.value(),
+      ) as _i5.Future<String?>);
+
+  @override
+  _i5.Future<List<String>?> getExternalCachePaths() => (super.noSuchMethod(
+        Invocation.method(
+          #getExternalCachePaths,
+          [],
+        ),
+        returnValue: _i5.Future<List<String>?>.value(),
+      ) as _i5.Future<List<String>?>);
+
+  @override
+  _i5.Future<List<String>?> getExternalStoragePaths(
+          {_i14.StorageDirectory? type}) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getExternalStoragePaths,
+          [],
+          {#type: type},
+        ),
+        returnValue: _i5.Future<List<String>?>.value(),
+      ) as _i5.Future<List<String>?>);
+
+  @override
+  _i5.Future<String?> getDownloadsPath() => (super.noSuchMethod(
+        Invocation.method(
+          #getDownloadsPath,
+          [],
+        ),
+        returnValue: _i5.Future<String?>.value(),
+      ) as _i5.Future<String?>);
 }

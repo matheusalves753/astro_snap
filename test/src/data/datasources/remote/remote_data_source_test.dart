@@ -10,8 +10,16 @@ import 'package:mockito/mockito.dart';
 import 'package:http/http.dart' as http;
 import 'package:astro_snap/src/data/models/apod_entry_model.dart';
 import 'package:astro_snap/src/data/datasources/remote/remote_data_source.dart';
+import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 
 import 'remote_data_source_test.mocks.dart';
+
+class FakePathProviderPlatform extends PathProviderPlatform {
+  @override
+  Future<String?> getApplicationDocumentsPath() async {
+    return 'test';
+  }
+}
 
 @GenerateMocks([
   http.Client,
@@ -19,6 +27,7 @@ import 'remote_data_source_test.mocks.dart';
   HiveInterface,
   Box,
   FileUtils,
+  PathProviderPlatform,
 ])
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,6 +40,7 @@ void main() {
   late MockFileUtils fileUtils;
 
   setUp(() async {
+    PathProviderPlatform.instance = FakePathProviderPlatform();
     mockHttpClient = MockClient();
     connectivityUtils = MockConnectivityUtils();
     mockHive = MockHiveInterface();
@@ -41,8 +51,12 @@ void main() {
       connectivityUtils,
       fileUtils,
     );
-
     await Hive.initFlutter();
+    if (!Hive.isAdapterRegistered(0)) {
+      Hive.registerAdapter(APODEntryModelAdapter());
+    }
+
+    when(connectivityUtils.hasConnectivity()).thenAnswer((_) async => true);
   });
 
   group('RemoteDataSource Tests', () {
@@ -61,13 +75,13 @@ void main() {
       () async {
         when(mockHttpClient.get(any))
             .thenAnswer((_) async => http.Response('[]', 200));
-        when(connectivityUtils.hasConnectivity()).thenAnswer((_) async => true);
+
         when(mockHive.openBox<APODEntryModel>('apod'))
             .thenAnswer((_) async => hiveBox);
         when(hiveBox.values).thenReturn(tAPODEntryModelList);
 
         when(fileUtils.getDocumentsDirectory())
-            .thenAnswer((_) async => Directory('test'));
+            .thenAnswer((_) async => Directory('testdir'));
 
         await dataSource.getAstronomyPictures();
 
@@ -82,9 +96,13 @@ void main() {
             jsonEncode(
                 tAPODEntryModelList.map((item) => item.toJson()).toList()),
             200));
+
         when(mockHive.openBox<APODEntryModel>('apod'))
             .thenAnswer((_) async => hiveBox);
         when(hiveBox.values).thenReturn(tAPODEntryModelList);
+
+        when(fileUtils.getDocumentsDirectory())
+            .thenAnswer((_) async => Directory('testdir'));
 
         final result = await dataSource.getAstronomyPictures();
 
@@ -97,13 +115,33 @@ void main() {
       () async {
         when(mockHttpClient.get(any))
             .thenAnswer((_) async => http.Response('Not Found', 404));
+
         when(mockHive.openBox<APODEntryModel>('apod'))
             .thenAnswer((_) async => hiveBox);
         when(hiveBox.values).thenReturn(tAPODEntryModelList);
 
+        when(fileUtils.getDocumentsDirectory())
+            .thenAnswer((_) async => Directory('testdir'));
+
         final call = dataSource.getAstronomyPictures;
 
         expect(() => call(), throwsException);
+      },
+    );
+
+    test(
+      'should return cached list of APODEntryModel when a SocketException is thrown',
+      () async {
+        when(mockHttpClient.get(any))
+            .thenThrow(const SocketException('No Internet'));
+
+        when(mockHive.openBox<APODEntryModel>('apod'))
+            .thenAnswer((_) async => hiveBox);
+        when(hiveBox.values).thenReturn(tAPODEntryModelList);
+
+        final result = await dataSource.getAstronomyPictures();
+
+        expect(result, equals(tAPODEntryModelList));
       },
     );
   });
