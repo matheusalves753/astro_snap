@@ -73,7 +73,7 @@ class _GalleryPageState extends State<GalleryPage> {
                   child: Column(
                     children: [
                       FutureBuilder(
-                        future: ConnectivityUtils.hasConnectivity(),
+                        future: _viewModel.connectivityUtils.hasConnectivity(),
                         builder: (context, hasConnectivity) =>
                             hasConnectivity.data ?? false
                                 ? const SizedBox.shrink()

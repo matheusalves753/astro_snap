@@ -1,14 +1,18 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../domain/domain.dart';
+import '../../infrastructure/utils/utils.dart';
 import 'gallery_page_state.dart';
 
 class GalleryPageViewModel extends Cubit<GalleryPageState> {
   final GetImageGalleryUseCase _getImageGalleryUseCase;
+  final ConnectivityUtils connectivityUtils;
   List<APODEntry> allImages = [];
 
-  GalleryPageViewModel(this._getImageGalleryUseCase)
-      : super(const GalleryPageState.loading());
+  GalleryPageViewModel(
+    this._getImageGalleryUseCase,
+    this.connectivityUtils,
+  ) : super(const GalleryPageState.loading());
 
   Future<void> loadData() async {
     try {

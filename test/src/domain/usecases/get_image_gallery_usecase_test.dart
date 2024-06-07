@@ -17,25 +17,49 @@ void main() {
     useCase = GetImageGalleryUseCaseImpl(mockAPODRepository);
   });
 
-  final tAPODEntryList = [
-    APODEntry(
-      date: DateTime.now(),
-      explanation: 'Test Explanation',
-      mediaType: 'image',
-      serviceVersion: 'v1',
-      title: 'Test Title',
-      url: 'https://test.com',
-    )
-  ];
+  group('GetImageGalleryUseCase Tests', () {
+    final tAPODEntryList = [
+      APODEntry(
+        date: DateTime.now(),
+        explanation: 'Test Explanation',
+        mediaType: 'image',
+        serviceVersion: 'v1',
+        title: 'Test Title',
+        url: 'https://test.com',
+      )
+    ];
+    test('should get list of APODEntry from the repository', () async {
+      when(mockAPODRepository.getAstronomyPictures())
+          .thenAnswer((_) async => tAPODEntryList);
 
-  test('should get list of APODEntry from the repository', () async {
-    when(mockAPODRepository.getAstronomyPictures())
-        .thenAnswer((_) async => tAPODEntryList);
+      final result = await useCase.call();
 
-    final result = await useCase.call();
+      expect(result, tAPODEntryList);
+      verify(mockAPODRepository.getAstronomyPictures());
+      verifyNoMoreInteractions(mockAPODRepository);
+    });
 
-    expect(result, tAPODEntryList);
-    verify(mockAPODRepository.getAstronomyPictures());
-    verifyNoMoreInteractions(mockAPODRepository);
+    test('should throw an exception when repository fails', () async {
+      when(mockAPODRepository.getAstronomyPictures())
+          .thenThrow(Exception('Failed to fetch data'));
+
+      final call = useCase.call();
+
+      expect(call, throwsA(isA<Exception>()));
+      verify(mockAPODRepository.getAstronomyPictures());
+      verifyNoMoreInteractions(mockAPODRepository);
+    });
+
+    test('should return an empty list when repository returns no data',
+        () async {
+      when(mockAPODRepository.getAstronomyPictures())
+          .thenAnswer((_) async => []);
+
+      final result = await useCase.call();
+
+      expect(result, []);
+      verify(mockAPODRepository.getAstronomyPictures());
+      verifyNoMoreInteractions(mockAPODRepository);
+    });
   });
 }

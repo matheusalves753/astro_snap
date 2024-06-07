@@ -1,5 +1,6 @@
 import 'package:astro_snap/src/data/models/models.dart';
 import 'package:astro_snap/src/domain/domain.dart';
+import 'package:astro_snap/src/infrastructure/utils/utils.dart';
 import 'package:astro_snap/src/presentation/presentation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
@@ -7,17 +8,24 @@ import 'package:mockito/mockito.dart';
 
 import 'gallery_page_view_model_test.mocks.dart';
 
-@GenerateMocks([GetImageGalleryUseCase])
+@GenerateMocks([
+  GetImageGalleryUseCase,
+  ConnectivityUtils,
+])
 void main() {
-  group('GalleryPageViewModel', () {
-    late MockGetImageGalleryUseCase mockGetImageGalleryUseCase;
-    late GalleryPageViewModel viewModel;
+  late MockGetImageGalleryUseCase mockGetImageGalleryUseCase;
+  late MockConnectivityUtils connectivityUtils;
+  late GalleryPageViewModel viewModel;
 
-    setUp(() {
-      mockGetImageGalleryUseCase = MockGetImageGalleryUseCase();
-      viewModel = GalleryPageViewModel(mockGetImageGalleryUseCase);
-    });
-
+  setUp(() {
+    mockGetImageGalleryUseCase = MockGetImageGalleryUseCase();
+    connectivityUtils = MockConnectivityUtils();
+    viewModel = GalleryPageViewModel(
+      mockGetImageGalleryUseCase,
+      connectivityUtils,
+    );
+  });
+  group('GalleryPageViewModel Tests', () {
     const tAPODEntryModel = APODEntryModel(
       date: '2024-06-06',
       explanation: 'Test explanation',

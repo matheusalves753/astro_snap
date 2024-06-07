@@ -16,7 +16,7 @@ void main() {
     repository = APODRepositoryImpl(mockRemoteDataSource);
   });
 
-  group('getAstronomyPictures', () {
+  group('APODRepository Tests', () {
     const tAPODEntryModel = APODEntryModel(
       date: '2024-06-06',
       explanation: 'Test explanation',
@@ -52,6 +52,34 @@ void main() {
         final call = repository.getAstronomyPictures();
 
         expect(() => call, throwsException);
+        verify(mockRemoteDataSource.getAstronomyPictures());
+        verifyNoMoreInteractions(mockRemoteDataSource);
+      },
+    );
+
+    test(
+      'should return an empty list when the RemoteDataSource returns an empty list',
+      () async {
+        when(mockRemoteDataSource.getAstronomyPictures())
+            .thenAnswer((_) async => []);
+
+        final result = await repository.getAstronomyPictures();
+
+        expect(result, equals([]));
+        verify(mockRemoteDataSource.getAstronomyPictures());
+        verifyNoMoreInteractions(mockRemoteDataSource);
+      },
+    );
+
+    test(
+      'should throw a specific exception when the call to RemoteDataSource throws a specific exception',
+      () async {
+        when(mockRemoteDataSource.getAstronomyPictures())
+            .thenThrow(const FormatException('Invalid format'));
+
+        final call = repository.getAstronomyPictures();
+
+        expect(() => call, throwsA(isA<FormatException>()));
         verify(mockRemoteDataSource.getAstronomyPictures());
         verifyNoMoreInteractions(mockRemoteDataSource);
       },

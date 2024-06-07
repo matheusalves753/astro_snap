@@ -1,13 +1,13 @@
 import 'dart:io';
 
+import 'package:astro_snap/locator.dart';
 import 'package:astro_snap/src/domain/domain.dart';
-import 'package:astro_snap/src/infrastructure/utils/dimension.dart';
+import 'package:astro_snap/src/infrastructure/infrastructure.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:intl/intl.dart';
-import 'package:path_provider/path_provider.dart';
 
 @RoutePage()
 class ImageDetailPage extends StatelessWidget {
@@ -19,7 +19,7 @@ class ImageDetailPage extends StatelessWidget {
   });
 
   Future<File?> _getCachedImage(String url) async {
-    final directory = await getApplicationDocumentsDirectory();
+    final directory = await locator<FileUtils>().getDocumentsDirectory();
     final filename = url.split('/').last;
     final file = File('${directory.path}/$filename');
     return file.existsSync() ? file : null;

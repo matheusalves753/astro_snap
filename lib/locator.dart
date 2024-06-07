@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 
 import 'src/data/data.dart';
 import 'src/domain/domain.dart';
+import 'src/infrastructure/utils/utils.dart';
 import 'src/presentation/presentation.dart';
 
 final GetIt locator = GetIt.instance;
@@ -15,12 +16,21 @@ void setupLocator() {
   _setupViewModels();
 }
 
-void _setupInsfrastructure() {}
+void _setupInsfrastructure() {
+  locator.registerLazySingleton<ConnectivityUtils>(
+    () => ConnectivityUtils(),
+  );
+  locator.registerLazySingleton<FileUtils>(
+    () => FileUtils(),
+  );
+}
 
 void _setupDataSources() {
   locator.registerLazySingleton<RemoteDataSource>(
     () => RemoteDataSourceImpl(
       http.Client(),
+      locator<ConnectivityUtils>(),
+      locator<FileUtils>(),
     ),
   );
 }
@@ -43,6 +53,7 @@ void _setupViewModels() {
   locator.registerFactory<GalleryPageViewModel>(
     () => GalleryPageViewModel(
       locator<GetImageGalleryUseCase>(),
+      locator<ConnectivityUtils>(),
     ),
   );
 }

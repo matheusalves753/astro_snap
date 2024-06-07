@@ -8,6 +8,8 @@ import 'dart:async' as _i3;
 import 'package:astro_snap/src/domain/entities/apod_entry.dart' as _i4;
 import 'package:astro_snap/src/domain/usecases/get_image_gallery_usecase.dart'
     as _i2;
+import 'package:astro_snap/src/infrastructure/utils/connectivity_utils.dart'
+    as _i5;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
@@ -40,4 +42,22 @@ class MockGetImageGalleryUseCase extends _i1.Mock
         ),
         returnValue: _i3.Future<List<_i4.APODEntry>>.value(<_i4.APODEntry>[]),
       ) as _i3.Future<List<_i4.APODEntry>>);
+}
+
+/// A class which mocks [ConnectivityUtils].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockConnectivityUtils extends _i1.Mock implements _i5.ConnectivityUtils {
+  MockConnectivityUtils() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i3.Future<bool> hasConnectivity() => (super.noSuchMethod(
+        Invocation.method(
+          #hasConnectivity,
+          [],
+        ),
+        returnValue: _i3.Future<bool>.value(false),
+      ) as _i3.Future<bool>);
 }
