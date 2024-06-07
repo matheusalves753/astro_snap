@@ -9,3 +9,9 @@ class ConnectivityUtils {
     return true;
   }
 }
+
+class ConnectivityService {
+  Future<bool> hasConnectivity() {
+    return ConnectivityUtils.hasConnectivity();
+  }
+}

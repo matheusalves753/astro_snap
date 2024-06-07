@@ -4,6 +4,7 @@ import 'package:astro_snap/src/infrastructure/utils/utils.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:astro_snap/src/data/models/apod_entry_model.dart';
+import 'package:path_provider/path_provider.dart';
 
 abstract interface class RemoteDataSource {
   Future<List<APODEntryModel>> getAstronomyPictures();
@@ -14,7 +15,9 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   final String _baseUrl = 'https://api.nasa.gov/';
   final String _apiKey = '0ykFZWZPc2LEh9LZR4HEZco1gHYwDAXsvymNBMLt';
 
-  RemoteDataSourceImpl(this._client);
+  RemoteDataSourceImpl(
+    this._client,
+  );
 
   @override
   Future<List<APODEntryModel>> getAstronomyPictures() async {
@@ -24,7 +27,8 @@ class RemoteDataSourceImpl implements RemoteDataSource {
     }
 
     const path = 'planetary/apod';
-    final url = '$_baseUrl$path?api_key=$_apiKey&count=10';
+    final url =
+        '$_baseUrl$path?api_key=$_apiKey&start_date=${DateTime.now().add(const Duration(days: -30)).toIso8601String().split('T').first}&end_date=${DateTime.now().toIso8601String().split('T').first}';
 
     try {
       final response = await _client.get(Uri.parse(url));
@@ -38,6 +42,8 @@ class RemoteDataSourceImpl implements RemoteDataSource {
         await box.clear();
         await box.addAll(images);
 
+        _cacheImages(images);
+
         return images;
       } else {
         throw Exception('Failed to load astronomy pictures');
@@ -47,6 +53,20 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       return box.values.toList();
     } catch (e) {
       rethrow;
+    }
+  }
+
+  Future<void> _cacheImages(List<APODEntryModel> images) async {
+    final directory = await getApplicationDocumentsDirectory();
+    for (var image in images) {
+      if (image.mediaType == 'image') {
+        final filename = image.url.split('/').last;
+        final file = File('${directory.path}/$filename');
+        if (!file.existsSync()) {
+          final response = await http.get(Uri.parse(image.url));
+          file.writeAsBytesSync(response.bodyBytes);
+        }
+      }
     }
   }
 }

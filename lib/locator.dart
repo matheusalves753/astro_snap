@@ -8,15 +8,20 @@ import 'src/presentation/presentation.dart';
 final GetIt locator = GetIt.instance;
 
 void setupLocator() {
+  _setupInsfrastructure();
   _setupDataSources();
   _setupRepositories();
   _setupUseCases();
   _setupViewModels();
 }
 
+void _setupInsfrastructure() {}
+
 void _setupDataSources() {
   locator.registerLazySingleton<RemoteDataSource>(
-    () => RemoteDataSourceImpl(http.Client()),
+    () => RemoteDataSourceImpl(
+      http.Client(),
+    ),
   );
 }
 

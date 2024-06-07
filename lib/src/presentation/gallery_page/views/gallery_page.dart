@@ -1,11 +1,15 @@
 import 'package:astro_snap/locator.dart';
 import 'package:astro_snap/src/presentation/gallery_page/gallery_page_state.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
+import '../../../infrastructure/navigation/navigation.dart';
 import '../../../infrastructure/utils/utils.dart';
 import '../gallery_page_view_model.dart';
 
+@RoutePage()
 class GalleryPage extends StatefulWidget {
   const GalleryPage({super.key});
 
@@ -37,67 +41,77 @@ class _GalleryPageState extends State<GalleryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Gallery'),
+        title: const Text('AstroSnap'),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(kToolbarHeight),
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                TextField(
-                  controller: _searchController,
-                  decoration: const InputDecoration(
-                    hintText: 'Search by title or date',
-                    border: OutlineInputBorder(),
-                    suffixIcon: Icon(Icons.search),
-                  ),
-                  onChanged: (query) {
-                    _viewModel.search(query);
-                  },
-                ),
-                FutureBuilder(
-                  future: ConnectivityUtils.hasConnectivity(),
-                  builder: (context, hasConnectivity) =>
-                      hasConnectivity.data ?? false
-                          ? const SizedBox.shrink()
-                          : const SizedBox(
-                              height: 18,
-                              child: Text(
-                                'No internet connection. Showing cached data.',
-                              ),
-                            ),
-                ),
-              ],
+            padding: const EdgeInsets.all(Dimension.xs),
+            child: TextField(
+              controller: _searchController,
+              decoration: const InputDecoration(
+                hintText: 'Search by title or date',
+                border: OutlineInputBorder(),
+                suffixIcon: Icon(Icons.search),
+              ),
+              onChanged: (query) {
+                _viewModel.search(query);
+              },
             ),
           ),
         ),
       ),
-      body: Center(
-        child: BlocBuilder<GalleryPageViewModel, GalleryPageState>(
-          bloc: _viewModel,
-          builder: (context, state) {
-            if (state is GalleryPageLoadingState) {
-              return const CircularProgressIndicator();
-            } else if (state is GalleryPageDataState) {
-              return RefreshIndicator(
-                onRefresh: _onRefresh,
-                child: ListView.builder(
-                  itemCount: state.entries.length,
-                  itemBuilder: (context, index) {
-                    final entry = state.entries[index];
-                    return ListTile(
-                      title: Text(entry.title),
-                      subtitle: Text(entry.date.toString()),
-                    );
-                  },
-                ),
-              );
-            } else if (state is GalleryPageErrorState) {
-              return const Text('ERROR');
-            } else {
-              return const SizedBox();
-            }
-          },
+      body: SafeArea(
+        child: Center(
+          child: BlocBuilder<GalleryPageViewModel, GalleryPageState>(
+            bloc: _viewModel,
+            builder: (context, state) {
+              if (state is GalleryPageLoadingState) {
+                return const CircularProgressIndicator();
+              } else if (state is GalleryPageDataState) {
+                return RefreshIndicator(
+                  onRefresh: _onRefresh,
+                  child: Column(
+                    children: [
+                      FutureBuilder(
+                        future: ConnectivityUtils.hasConnectivity(),
+                        builder: (context, hasConnectivity) =>
+                            hasConnectivity.data ?? false
+                                ? const SizedBox.shrink()
+                                : const SizedBox(
+                                    height: Dimension.md,
+                                    child: Text(
+                                      'No internet connection. Showing cached data.',
+                                    ),
+                                  ),
+                      ),
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: state.entries.length,
+                          itemBuilder: (context, index) {
+                            final entry = state.entries[index];
+                            final formattedDate = DateFormat.yMMMMd(
+                              Localizations.localeOf(context).toString(),
+                            ).format(entry.date);
+                            return ListTile(
+                              onTap: () => context.router.push(
+                                ImageDetailRoute(entry: entry),
+                              ),
+                              title: Text(entry.title),
+                              subtitle: Text(formattedDate),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              } else if (state is GalleryPageErrorState) {
+                return const Text('ERROR');
+              } else {
+                return const SizedBox();
+              }
+            },
+          ),
         ),
       ),
     );
