@@ -57,10 +57,17 @@ lib
 ## Dependencies
 
 - **Flutter**: UI toolkit for building natively compiled applications for mobile, web, and desktop from a single codebase.
-- **Cubit**: A lightweight state management solution.
 - **GetIt**: A simple service locator for Dart and Flutter projects.
+- **Cubit**: A lightweight state management solution, part of the flutter_bloc package.
+- **Freezed**: Code generation for unions/pattern-matching/copy in Dart.
 - **Hive**: A lightweight and blazing fast key-value database written in pure Dart.
-- **Connectivity Plus**: A Flutter plugin for discovering the state of the network (WiFi & mobile/cellular) connectivity.
+- **Connectivity** Plus: A Flutter plugin for discovering the state of the network (WiFi & mobile/cellular) connectivity.
+- **Intl**: Provides internationalization and localization facilities.
+- **Auto** Route: Declarative routing for Flutter.
+- **Cached** Network Image: A flutter library to show images from the internet and keep them in the cache directory.
+- **Path** Provider: A Flutter plugin for finding commonly used locations on the filesystem.
+- **Flutter** Cache Manager: Generic cache manager for flutter.
+
 
 ## Offline Support
 
