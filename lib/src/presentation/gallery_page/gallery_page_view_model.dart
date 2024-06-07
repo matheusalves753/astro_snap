@@ -5,7 +5,7 @@ import 'gallery_page_state.dart';
 
 class GalleryPageViewModel extends Cubit<GalleryPageState> {
   final GetImageGalleryUseCase _getImageGalleryUseCase;
-  List<APODEntry> _allImages = [];
+  List<APODEntry> allImages = [];
 
   GalleryPageViewModel(this._getImageGalleryUseCase)
       : super(const GalleryPageState.loading());
@@ -14,7 +14,7 @@ class GalleryPageViewModel extends Cubit<GalleryPageState> {
     try {
       emit(const GalleryPageState.loading());
       final data = await _getImageGalleryUseCase();
-      _allImages = data;
+      allImages = data;
       emit(GalleryPageState.data(entries: data));
     } catch (e) {
       emit(const GalleryPageState.error());
@@ -22,7 +22,7 @@ class GalleryPageViewModel extends Cubit<GalleryPageState> {
   }
 
   void search(String query) {
-    final filteredImages = _allImages.where((image) {
+    final filteredImages = allImages.where((image) {
       final titleLower = image.title.toLowerCase();
       final dateStr = image.date.toIso8601String().toLowerCase();
       final searchLower = query.toLowerCase();

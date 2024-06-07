@@ -42,5 +42,19 @@ void main() {
         verifyNoMoreInteractions(mockRemoteDataSource);
       },
     );
+
+    test(
+      'should throw an exception when the call to RemoteDataSource is unsuccessful',
+      () async {
+        when(mockRemoteDataSource.getAstronomyPictures())
+            .thenThrow(Exception('Failed to fetch data'));
+
+        final call = repository.getAstronomyPictures();
+
+        expect(() => call, throwsException);
+        verify(mockRemoteDataSource.getAstronomyPictures());
+        verifyNoMoreInteractions(mockRemoteDataSource);
+      },
+    );
   });
 }
